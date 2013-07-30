@@ -9,4 +9,6 @@ public interface CrudService {
   void update(String id, String value) throws ResourceNotFoundException;
   
   void delete(String id);
+  
+  boolean isOk();
 }
