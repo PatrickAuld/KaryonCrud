@@ -13,19 +13,19 @@ final class InMemCrudService implements CrudService {
   }
 
   @Override
-  public void create(String id, String value) {
+  public void create(String id, String value) throws DuplicateResourceExistsException {
     if( this.resources.containsKey(id) ) {
-      
+     throw new DuplicateResourceExistsException(id); 
     }
     this.resources.put(id, value);
   }
 
   @Override
-  public void update(String id, String value) {
-    if( this.resources.containsKey(id) ) {
-      this.resources.put(id, value);
+  public void update(String id, String value) throws ResourceNotFoundException {
+    if( !this.resources.containsKey(id) ) {
+      throw new ResourceNotFoundException(id);
     }
-    
+    this.resources.put(id, value);
   }
 
   @Override

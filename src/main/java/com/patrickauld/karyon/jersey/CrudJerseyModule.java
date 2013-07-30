@@ -11,7 +11,7 @@ public class CrudJerseyModule extends JerseyServletModule {
   @Override
   protected void configureServlets() {
     Map<String, String> params = Maps.newHashMap();
-    params.put("com.sun.jersey.config.property.packages","com.patrickauld.karyon");
+    params.put("com.sun.jersey.config.property.packages","com.patrickauld.karyon.jersey");
     serve("/*").with(GuiceContainer.class, params);
   }
 }

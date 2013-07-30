@@ -6,10 +6,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.patrickauld.karyon.service.CrudService;
+import com.patrickauld.karyon.service.DuplicateResourceExistsException;
+import com.patrickauld.karyon.service.ResourceNotFoundException;
 
 @Path("/{id}")
 @Singleton
@@ -24,17 +28,29 @@ public class CrudResource {
 
   @GET
   public String getResource(@PathParam("id") String id) {
-    return this.service.get(id);
+    String value = this.service.get(id);
+    if( value == null ) {
+      throw new WebApplicationException(Status.NOT_FOUND);
+    }
+    return value;
   }
   
   @PUT
   public void createResource(@PathParam("id") String id, String body) {
-    this.service.create(id, body);
+    try {
+      this.service.create(id, body);
+    } catch (DuplicateResourceExistsException e) {
+      throw new WebApplicationException(e, Status.BAD_REQUEST);
+    }
   }
   
   @POST
   public void updateResource(@PathParam("id") String id, String body) {
-    this.service.update(id, body);
+    try {
+      this.service.update(id, body);
+    } catch (ResourceNotFoundException e) {
+      throw new WebApplicationException(e, Status.BAD_REQUEST);
+    }
   }
   
   @DELETE
