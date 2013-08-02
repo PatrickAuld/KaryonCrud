@@ -9,7 +9,8 @@ public class CrudModule extends AbstractModule {
   @Override
   protected void configure() {
     //Bind our service used by the Jersey Resource
-    bind(CrudService.class).to(InMemCrudService.class);
+    bind(CrudService.class).to(HystrixCrudServiceDecorator.class);
+    bind(CrudService.class).to(InMemCrudService.class).in(CrudServiceImpl.class);
     
     //Bind a configuration provider that the InMemCrudService uses
     bind(ConfigurationProvider.class).to(ArchaiusConfigurationProvider.class);
